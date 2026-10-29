@@ -128,6 +128,19 @@
             display: flex;
             align-items: center;
             gap: 4px;
+            cursor: pointer;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.2s ease;
+        }
+
+        .brand-pin-pill:hover,
+        .brand-pin-pill:active {
+            background: rgba(139, 92, 246, 0.2);
+            border-color: rgba(139, 92, 246, 0.4);
+            color: #FFFFFF;
         }
 
         .brand-pin-pill b {
@@ -184,7 +197,7 @@
             background: rgba(244, 63, 94, 0.35);
         }
 
-        /* Mode Switcher Tabs: D-Pad vs Trackpad */
+        /* Mode Switcher Tabs */
         .mode-switcher-wrap {
             display: flex;
             background: rgba(0, 0, 0, 0.32);
@@ -224,7 +237,7 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 18px 8px;
+            padding: 16px 8px;
             position: relative;
         }
 
@@ -242,6 +255,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            touch-action: none;
         }
 
         .dpad-arrow {
@@ -260,11 +274,12 @@
             z-index: 2;
         }
 
+        .dpad-arrow.glow-active,
         .dpad-arrow:active {
             color: #FFFFFF;
-            transform: scale(0.9);
-            background: rgba(139, 92, 246, 0.3);
-            box-shadow: 0 0 16px rgba(139, 92, 246, 0.5);
+            transform: scale(0.92);
+            background: rgba(139, 92, 246, 0.35);
+            box-shadow: 0 0 20px rgba(139, 92, 246, 0.6);
         }
 
         .dpad-arrow.up    { top: 4px; left: calc(50% - 30px); }
@@ -290,12 +305,22 @@
             justify-content: center;
             cursor: pointer;
             z-index: 3;
-            transition: all 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.08s ease-out, filter 0.12s ease;
+            touch-action: none;
         }
 
         .dpad-center-ok:active {
-            transform: scale(0.91);
             filter: brightness(1.2);
+        }
+
+        .dpad-hint-note {
+            margin-top: 10px;
+            font-size: 11px;
+            color: var(--text-muted);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
 
         /* ================= VIRTUAL AIR MOUSE TRACKPAD ================= */
@@ -332,17 +357,19 @@
             flex-direction: column;
             align-items: center;
             gap: 6px;
+            text-align: center;
+            padding: 0 16px;
         }
 
         .trackpad-btn-row {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1.4fr 1fr;
             gap: 8px;
             width: 100%;
         }
 
         .trackpad-action-btn {
-            padding: 12px;
+            padding: 13px 10px;
             border-radius: 14px;
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--border-glass);
@@ -357,18 +384,23 @@
             transition: all 0.15s ease;
         }
 
-        .trackpad-action-btn:active {
-            transform: scale(0.95);
-            background: rgba(139, 92, 246, 0.25);
-            border-color: var(--accent-violet);
+        .trackpad-action-btn.primary-click {
+            background: linear-gradient(135deg, var(--accent-violet), var(--accent-indigo));
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 4px 16px var(--accent-glow);
         }
 
-        /* ================= VOICE COMMAND BAR ================= */
+        .trackpad-action-btn:active {
+            transform: scale(0.95);
+            filter: brightness(1.15);
+        }
+
+        /* ================= GOOGLE ASSISTANT & VOICE COMMAND ================= */
         .voice-card {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: linear-gradient(135deg, rgba(30, 24, 60, 0.8) 0%, rgba(20, 24, 46, 0.7) 100%);
+            background: linear-gradient(135deg, rgba(28, 26, 62, 0.82) 0%, rgba(18, 22, 46, 0.72) 100%);
             border: 1px solid rgba(139, 92, 246, 0.25);
             padding: 12px 14px;
             border-radius: 20px;
@@ -378,7 +410,7 @@
         .voice-info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 3px;
             flex: 1;
             overflow: hidden;
         }
@@ -390,6 +422,18 @@
             display: flex;
             align-items: center;
             gap: 6px;
+        }
+
+        /* Google 4-Color Dots */
+        .google-dots-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 3.5px;
+        }
+        .g-dot {
+            width: 6.5px;
+            height: 6.5px;
+            border-radius: 50%;
         }
 
         .voice-sub {
@@ -413,12 +457,12 @@
             cursor: pointer;
             box-shadow: 0 4px 16px var(--accent-glow);
             transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
+            flex-shrink: 0;
         }
 
         .voice-mic-btn.listening {
-            background: linear-gradient(135deg, #F43F5E 0%, #E11D48 100%);
-            box-shadow: 0 0 24px rgba(244, 63, 94, 0.7);
+            background: linear-gradient(135deg, #EA4335 0%, #B91C1C 100%);
+            box-shadow: 0 0 24px rgba(234, 67, 53, 0.7);
             animation: pulseWave 1.4s infinite;
         }
 
@@ -790,35 +834,45 @@
     <div class="container">
 
         <!-- 1. TOP HEADER -->
-        <div class="glass-card header-bar">
-            <div class="brand-info">
-                <div class="brand-title-wrap">
-                    <span class="brand-logo-icon">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect width="20" height="15" x="2" y="7" rx="3"/>
-                            <polyline points="17 2 12 7 7 2"/>
-                        </svg>
-                    </span>
-                    <span class="brand-name">Pimax TV Remote</span>
+        <div class="glass-card header-bar" style="flex-direction: column; gap: 8px; align-items: stretch; padding: 10px 14px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                <div class="brand-info">
+                    <div class="brand-title-wrap">
+                        <span class="brand-logo-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="20" height="15" x="2" y="7" rx="3"/>
+                                <polyline points="17 2 12 7 7 2"/>
+                            </svg>
+                        </span>
+                        <span class="brand-name">Pimax TV Remote</span>
+                    </div>
+                    <div class="brand-pin-pill" onclick="toggleKeyEditor()" title="Bấm để đổi mã kết nối Tivi">
+                        <span>Mã TV:</span> <b id="pin-display">8899</b>
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" style="color: var(--accent-violet); margin-left: 2px;"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                    </div>
                 </div>
-                <div class="brand-pin-pill">
-                    Mã TV: <b id="pin-display">8899</b>
+
+                <div class="header-actions">
+                    <div class="status-pill" id="conn-status-pill">
+                        <span class="status-dot" id="conn-dot"></span>
+                        <span id="conn-status-text">Đang kết nối...</span>
+                    </div>
+
+                    <!-- Nút Nguồn -->
+                    <button class="power-btn" onclick="sendCmd('POWER_TOGGLE')" title="Bật/Tắt chế độ chờ">
+                        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
+                            <line x1="12" y1="2" x2="12" y2="12"/>
+                        </svg>
+                    </button>
                 </div>
             </div>
 
-            <div class="header-actions">
-                <div class="status-pill" id="conn-status-pill">
-                    <span class="status-dot" id="conn-dot"></span>
-                    <span id="conn-status-text">Đang kết nối...</span>
-                </div>
-
-                <!-- Nút Nguồn -->
-                <button class="power-btn" onclick="sendCmd('POWER_TOGGLE')" title="Bật/Tắt chế độ chờ">
-                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
-                        <line x1="12" y1="2" x2="12" y2="12"/>
-                    </svg>
-                </button>
+            <!-- Khung đổi mã TV trực tiếp không cần quét lại QR -->
+            <div id="pin-editor-box" style="display: none; background: rgba(0, 0, 0, 0.38); border: 1px solid var(--border-glass-light); border-radius: 14px; padding: 6px 8px; gap: 6px; align-items: center; width: 100%;">
+                <input type="text" id="manual-pin-input" class="glass-input-sm" maxlength="8" placeholder="Mã TV (VD: 8899)" style="flex: 1; padding: 6px 10px; font-size: 12px; letter-spacing: 1px;" onkeydown="if(event.key==='Enter') saveAndConnectPin()">
+                <button class="btn-violet-sm" onclick="saveAndConnectPin()" style="padding: 6px 12px;">Ghép nối</button>
+                <button class="btn-violet-sm" onclick="toggleKeyEditor(false)" style="background: rgba(255,255,255,0.08); border-color: var(--border-glass); padding: 6px 9px;">Hủy</button>
             </div>
         </div>
 
@@ -834,82 +888,88 @@
             </button>
         </div>
 
-        <!-- 3A. D-PAD CONTROLLER -->
+        <!-- 3A. D-PAD CONTROLLER & VIRTUAL JOYSTICK -->
         <div class="glass-card dpad-container" id="dpad-panel">
-            <div class="dpad-outer-wheel">
+            <div class="dpad-outer-wheel" id="dpad-wheel">
                 <!-- Lên -->
-                <button class="dpad-arrow up" onclick="sendCmd('KEY_UP')" aria-label="Lên">
+                <button class="dpad-arrow up" id="arrow-up" onclick="sendCmd('KEY_UP')" aria-label="Lên">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="18 15 12 9 6 15"/>
                     </svg>
                 </button>
 
                 <!-- Trái -->
-                <button class="dpad-arrow left" onclick="sendCmd('KEY_LEFT')" aria-label="Trái">
+                <button class="dpad-arrow left" id="arrow-left" onclick="sendCmd('KEY_LEFT')" aria-label="Trái">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="15 18 9 12 15 6"/>
                     </svg>
                 </button>
 
-                <!-- Nút OK Ở Tâm -->
-                <button class="dpad-center-ok" onclick="sendCmd('KEY_ENTER')" aria-label="Xác nhận OK">
+                <!-- Nút OK Ở Tâm (Hỗ trợ chạm OK và giữ kéo Lên/Xuống/Trái/Phải) -->
+                <div class="dpad-center-ok" id="center-ok-btn" aria-label="Xác nhận OK">
                     OK
-                </button>
+                </div>
 
                 <!-- Phải -->
-                <button class="dpad-arrow right" onclick="sendCmd('KEY_RIGHT')" aria-label="Phải">
+                <button class="dpad-arrow right" id="arrow-right" onclick="sendCmd('KEY_RIGHT')" aria-label="Phải">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="9 18 15 12 9 6"/>
                     </svg>
                 </button>
 
                 <!-- Xuống -->
-                <button class="dpad-arrow down" onclick="sendCmd('KEY_DOWN')" aria-label="Xuống">
+                <button class="dpad-arrow down" id="arrow-down" onclick="sendCmd('KEY_DOWN')" aria-label="Xuống">
                     <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"/>
                     </svg>
                 </button>
             </div>
+
+            <div class="dpad-hint-note">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                <span>Mẹo: Giữ tay tại OK và trượt để điều hướng 4 chiều</span>
+            </div>
         </div>
 
-        <!-- 3B. VIRTUAL AIR MOUSE TRACKPAD PANEL -->
+        <!-- 3B. VIRTUAL AIR MOUSE TRACKPAD PANEL (ĐÃ XÓA TAP CLICK) -->
         <div class="glass-card mouse-trackpad-card" id="mouse-panel">
             <div class="trackpad-touch-surface" id="trackpad-surface">
                 <div class="trackpad-guide-text">
-                    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--neon-blue);">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--neon-blue);">
                         <rect x="5" y="2" width="14" height="20" rx="7"/>
                         <line x1="12" y1="6" x2="12" y2="10"/>
                     </svg>
                     <span>Lướt ngón tay để di chuyển chuột trên TV</span>
-                    <span style="font-size: 10.5px; opacity: 0.7;">Chạm (tap) một ngón để click</span>
+                    <span style="font-size: 11px; color: var(--neon-blue); font-weight: 700;">Bấm nút "Click Chuột" bên dưới để chọn mục</span>
                 </div>
             </div>
             <div class="trackpad-btn-row">
-                <button class="trackpad-action-btn" onclick="sendCmd('MOUSE_CLICK')">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
-                    <span>Click Chuột Trái</span>
+                <button class="trackpad-action-btn primary-click" onclick="sendCmd('MOUSE_CLICK')">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/></svg>
+                    <span>Bấm Chuột (Click)</span>
                 </button>
                 <button class="trackpad-action-btn" onclick="sendCmd('KEY_BACK')">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/></svg>
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 14 4 9l5-5"/></svg>
                     <span>Quay lại</span>
                 </button>
             </div>
         </div>
 
-        <!-- 4. ĐIỀU KHIỂN BẰNG GIỌNG NÓI (VOICE COMMAND) -->
+        <!-- 4. GOOGLE ASSISTANT & TRỢ LÝ GIỌNG NÓI -->
         <div class="voice-card">
             <div class="voice-info">
                 <span class="voice-title">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--accent-violet);">
-                        <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
-                        <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
-                        <line x1="12" y1="19" x2="12" y2="22"/>
-                    </svg>
-                    <span>Trợ Lý Giọng Nói</span>
+                    <div class="google-dots-wrap">
+                        <span class="g-dot" style="background:#4285F4;"></span>
+                        <span class="g-dot" style="background:#EA4335;"></span>
+                        <span class="g-dot" style="background:#FBBC05;"></span>
+                        <span class="g-dot" style="background:#34A853;"></span>
+                    </div>
+                    <span>Google Assistant</span>
                 </span>
-                <span class="voice-sub" id="voice-status-text">Bấm mic để nói "Mở YouTube", "Tăng âm"...</span>
+                <span class="voice-sub" id="voice-status-text">Bấm mic để nói "Mở YouTube", "Thời tiết"...</span>
             </div>
-            <button class="voice-mic-btn" id="voice-btn" onclick="toggleVoiceRecognition()" title="Bấm để nói">
+            <button class="voice-mic-btn" id="voice-btn" onclick="toggleVoiceRecognition()" title="Bấm để nói với Google Assistant">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
                     <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
@@ -1120,10 +1180,56 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // 1. Phân tích tham số PIN từ URL
+        // 1. Phân tích tham số PIN từ URL hoặc bộ nhớ đã ghép nối trước đó
         const urlParams = new URLSearchParams(window.location.search);
-        const targetPin = urlParams.get('pin') || urlParams.get('room') || '8899';
+        let targetPin = urlParams.get('pin') || urlParams.get('room') || localStorage.getItem('pimax_last_paired_pin') || '8899';
         document.getElementById('pin-display').textContent = targetPin;
+
+        function toggleKeyEditor(forceShow) {
+            const box = document.getElementById('pin-editor-box');
+            const inp = document.getElementById('manual-pin-input');
+            const isHidden = box.style.display === 'none' || box.style.display === '';
+            const shouldShow = forceShow !== undefined ? forceShow : isHidden;
+
+            box.style.display = shouldShow ? 'flex' : 'none';
+            if (shouldShow && inp) {
+                inp.value = targetPin;
+                setTimeout(() => inp.focus(), 80);
+            }
+        }
+
+        function saveAndConnectPin() {
+            const inp = document.getElementById('manual-pin-input');
+            if (!inp || !inp.value.trim()) return;
+
+            const newPin = inp.value.trim();
+            targetPin = newPin;
+            document.getElementById('pin-display').textContent = newPin;
+
+            try {
+                localStorage.setItem('pimax_last_paired_pin', newPin);
+            } catch (e) {}
+
+            // Cập nhật tham số URL (không reload trang)
+            try {
+                const newUrl = new URL(window.location.href);
+                newUrl.searchParams.set('pin', newPin);
+                window.history.replaceState({}, '', newUrl.toString());
+            } catch (e) {}
+
+            toggleKeyEditor(false);
+
+            // Ngắt kết nối hiện tại và tái kết nối tới TV mới
+            if (activeConn) {
+                try { activeConn.close(); } catch (e) {}
+                activeConn = null;
+            }
+            isConnected = false;
+            updateStatus('Đang kết nối TV mới...', '#F59E0B');
+            connectToTv();
+
+            if (navigator.vibrate) navigator.vibrate([20, 40]);
+        }
 
         let phonePeer = null;
         let activeConn = null;
@@ -1131,6 +1237,7 @@
         let isMuted = false;
         let sleepTimerSec = 0;
         let sleepTimerInterval = null;
+        let lastNavSendTime = 0;
 
         const statusPill = document.getElementById('conn-status-pill');
         const statusDot = document.getElementById('conn-dot');
@@ -1157,7 +1264,6 @@
                 mousePanel.style.display = 'flex';
                 tabDpad.classList.remove('active');
                 tabMouse.classList.add('active');
-                // Gửi kích hoạt chuột ảo trên TV
                 sendCmd('MOUSE_MOVE', { dx: 0, dy: 0 });
             } else {
                 dpadPanel.style.display = 'flex';
@@ -1168,20 +1274,16 @@
             if (navigator.vibrate) navigator.vibrate(15);
         }
 
-        // Khởi tạo sự kiện Touch cho Trackpad cảm ứng
+        // 3. TRACKPAD CẢM ỨNG (ĐÃ XÓA HOÀN TOÀN TAP-TO-CLICK THEO YÊU CẦU)
         const trackpad = document.getElementById('trackpad-surface');
         let lastTouchX = null;
         let lastTouchY = null;
-        let touchStartTime = 0;
-        let hasMovedSignificantly = false;
 
         trackpad.addEventListener('touchstart', (e) => {
             if (e.touches.length === 1) {
                 const touch = e.touches[0];
                 lastTouchX = touch.clientX;
                 lastTouchY = touch.clientY;
-                touchStartTime = Date.now();
-                hasMovedSignificantly = false;
             }
         }, { passive: false });
 
@@ -1192,8 +1294,7 @@
                 const dx = touch.clientX - lastTouchX;
                 const dy = touch.clientY - lastTouchY;
 
-                if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
-                    hasMovedSignificantly = true;
+                if (Math.abs(dx) > 1.5 || Math.abs(dy) > 1.5) {
                     sendCmd('MOUSE_MOVE', { dx, dy });
                     lastTouchX = touch.clientX;
                     lastTouchY = touch.clientY;
@@ -1202,17 +1303,117 @@
         }, { passive: false });
 
         trackpad.addEventListener('touchend', (e) => {
-            const touchDuration = Date.now() - touchStartTime;
-            // Nếu chỉ chạm nhanh dưới 220ms và không di chuyển nhiều -> Tap to Click
-            if (!hasMovedSignificantly && touchDuration < 220) {
-                sendCmd('MOUSE_CLICK');
-                if (navigator.vibrate) navigator.vibrate(20);
-            }
+            // ĐÃ XÓA TAP CLICK THEO YÊU CẦU: Không còn tự động click khi nhấc tay nữa!
             lastTouchX = null;
             lastTouchY = null;
         });
 
-        // 3. Khởi tạo PeerJS WebRTC P2P
+        // 4. TÍNH NĂNG GIỮ TAY TẠI NÚT OK KÉO/VUỐT LÊN, XUỐNG, TRÁI, PHẢI (VIRTUAL JOYSTICK ON OK)
+        const centerOkBtn = document.getElementById('center-ok-btn');
+        const arrowUp = document.getElementById('arrow-up');
+        const arrowDown = document.getElementById('arrow-down');
+        const arrowLeft = document.getElementById('arrow-left');
+        const arrowRight = document.getElementById('arrow-right');
+
+        let okTouchStartX = null;
+        let okTouchStartY = null;
+        let okTouchStartTime = 0;
+        let okSwipeRepeatTimer = null;
+        let currentSwipeDir = null;
+        let hasTriggeredSwipe = false;
+
+        centerOkBtn.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 1) {
+                const touch = e.touches[0];
+                okTouchStartX = touch.clientX;
+                okTouchStartY = touch.clientY;
+                okTouchStartTime = Date.now();
+                hasTriggeredSwipe = false;
+                currentSwipeDir = null;
+            }
+        }, { passive: false });
+
+        centerOkBtn.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 1 && okTouchStartX !== null && okTouchStartY !== null) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const dx = touch.clientX - okTouchStartX;
+                const dy = touch.clientY - okTouchStartY;
+
+                // Giới hạn độ xê dịch vật lý của nút OK tạo cảm giác đàn hồi
+                const transX = Math.max(-14, Math.min(14, dx * 0.4));
+                const transY = Math.max(-14, Math.min(14, dy * 0.4));
+                centerOkBtn.style.transform = `translate(${transX}px, ${transY}px)`;
+
+                const DRAG_THRESHOLD = 22; // Ngưỡng trượt 22px
+                let detectedDir = null;
+
+                if (Math.abs(dy) > Math.abs(dx)) {
+                    if (dy < -DRAG_THRESHOLD) detectedDir = 'KEY_UP';
+                    else if (dy > DRAG_THRESHOLD) detectedDir = 'KEY_DOWN';
+                } else {
+                    if (dx < -DRAG_THRESHOLD) detectedDir = 'KEY_LEFT';
+                    else if (dx > DRAG_THRESHOLD) detectedDir = 'KEY_RIGHT';
+                }
+
+                // Cập nhật hiệu ứng phát sáng cho mũi tên tương ứng
+                [arrowUp, arrowDown, arrowLeft, arrowRight].forEach(a => a.classList.remove('glow-active'));
+                if (detectedDir === 'KEY_UP') arrowUp.classList.add('glow-active');
+                if (detectedDir === 'KEY_DOWN') arrowDown.classList.add('glow-active');
+                if (detectedDir === 'KEY_LEFT') arrowLeft.classList.add('glow-active');
+                if (detectedDir === 'KEY_RIGHT') arrowRight.classList.add('glow-active');
+
+                if (detectedDir && detectedDir !== currentSwipeDir) {
+                    currentSwipeDir = detectedDir;
+                    hasTriggeredSwipe = true;
+                    sendCmd(detectedDir);
+                    if (navigator.vibrate) navigator.vibrate(18);
+
+                    // Khi tiếp tục giữ tay kéo về hướng đó, tự động lặp lại nhịp nhàng 240ms
+                    clearInterval(okSwipeRepeatTimer);
+                    okSwipeRepeatTimer = setInterval(() => {
+                        if (currentSwipeDir) {
+                            sendCmd(currentSwipeDir);
+                            if (navigator.vibrate) navigator.vibrate(14);
+                        }
+                    }, 240);
+                } else if (!detectedDir) {
+                    currentSwipeDir = null;
+                    clearInterval(okSwipeRepeatTimer);
+                }
+            }
+        }, { passive: false });
+
+        function resetOkCenter() {
+            centerOkBtn.style.transform = 'translate(0, 0)';
+            [arrowUp, arrowDown, arrowLeft, arrowRight].forEach(a => a.classList.remove('glow-active'));
+            clearInterval(okSwipeRepeatTimer);
+            okSwipeRepeatTimer = null;
+            currentSwipeDir = null;
+        }
+
+        centerOkBtn.addEventListener('touchend', (e) => {
+            const touchDuration = Date.now() - okTouchStartTime;
+            // Nếu người dùng KHÔNG vuốt mà chỉ chạm nhanh vào nút OK (< 350ms) -> Kích hoạt lệnh OK (Enter)
+            if (!hasTriggeredSwipe && touchDuration < 350) {
+                sendCmd('KEY_ENTER');
+                if (navigator.vibrate) navigator.vibrate(22);
+            }
+            resetOkCenter();
+            okTouchStartX = null;
+            okTouchStartY = null;
+        });
+
+        centerOkBtn.addEventListener('touchcancel', resetOkCenter);
+
+        // Hỗ trợ click bằng chuột máy tính trên máy tính bàn
+        centerOkBtn.addEventListener('click', (e) => {
+            if (!hasTriggeredSwipe) {
+                sendCmd('KEY_ENTER');
+            }
+        });
+
+        // 5. Khởi tạo PeerJS WebRTC P2P
         function initPeerConnection() {
             if (typeof Peer === 'undefined') {
                 updateStatus('Chế độ Cloud Relay', '#38BDF8');
@@ -1261,15 +1462,27 @@
             });
         }
 
-        // 4. Gửi lệnh điều khiển (WebRTC P2P + Cloud Relay dự phòng)
+        // 6. GỬI LỆNH ĐIỀU KHIỂN (ĐÃ FIX: CHỐNG DỘI PHÍM & KHÔNG GỬI TRÙNG 2 KÊNH)
         function sendCmd(cmd, payload = '') {
-            const msg = { cmd, payload, t: Date.now() };
+            const now = Date.now();
+            const isNav = ['KEY_UP','KEY_DOWN','KEY_LEFT','KEY_RIGHT','KEY_ENTER','KEY_BACK','KEY_HOME'].includes(cmd);
+
+            // Chống dội phím (Debounce 140ms cho các phím điều hướng)
+            if (isNav) {
+                if (now - lastNavSendTime < 135) return;
+                lastNavSendTime = now;
+            }
+
+            // Tạo mã ID duy nhất cho gói tin
+            const msgId = Math.random().toString(36).substring(2, 9);
+            const msg = { id: msgId, cmd, payload, t: now };
 
             if (navigator.vibrate) {
-                navigator.vibrate(18);
+                navigator.vibrate(16);
             }
 
             let sentViaPeer = false;
+            // Kênh 1: Ưu tiên gửi qua PeerJS WebRTC P2P (0-2ms latency)
             if (activeConn && activeConn.open) {
                 try {
                     activeConn.send(msg);
@@ -1277,21 +1490,19 @@
                 } catch (e) {}
             }
 
-            // Gửi qua Cloud Broker khi không phải chuột hoặc ảnh nặng
-            if (cmd !== 'SET_WALLPAPER' && cmd !== 'MOUSE_MOVE') {
+            // Kênh 2: CHỈ gửi dự phòng qua Cloud Relay nếu WebRTC P2P CHƯA KẾT NỐI (Chặn triệt để nhảy 2-3 bước!)
+            if (!sentViaPeer && cmd !== 'SET_WALLPAPER' && cmd !== 'MOUSE_MOVE') {
                 fetch(`https://ntfy.sh/pimax_tv_remote_${targetPin}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(msg)
                 }).then(() => {
-                    if (!sentViaPeer) {
-                        updateStatus('Đã kết nối qua Cloud', '#10B981');
-                    }
+                    updateStatus('Đã gửi qua Cloud', '#10B981');
                 }).catch(() => {});
             }
         }
 
-        // 5. TRỢ LÝ GIỌNG NÓI THÔNG MINH (VOICE ASSISTANT)
+        // 7. GOOGLE ASSISTANT & NHẬN DIỆN GIỌNG NÓI CHUẨN ANDROID TV
         let recognition = null;
         let isListening = false;
 
@@ -1301,7 +1512,7 @@
             const voiceStatus = document.getElementById('voice-status-text');
 
             if (!SpeechRecognition) {
-                alert('Trình duyệt của bạn chưa hỗ trợ nhận diện giọng nói Web Speech. Hãy mở bằng Google Chrome hoặc Safari nhé!');
+                alert('Trình duyệt của bạn chưa hỗ trợ Web Speech API. Hãy mở bằng Google Chrome hoặc Safari nhé!');
                 return;
             }
 
@@ -1319,8 +1530,9 @@
                 recognition.onstart = () => {
                     isListening = true;
                     micBtn.classList.add('listening');
-                    voiceStatus.textContent = '🎙️ Đang lắng nghe bạn nói...';
+                    voiceStatus.textContent = '🎙️ Google Assistant đang lắng nghe...';
                     voiceStatus.style.color = '#38BDF8';
+                    sendCmd('ASSISTANT_ACTIVATE');
                     if (navigator.vibrate) navigator.vibrate([20, 40]);
                 };
 
@@ -1350,7 +1562,7 @@
             }
         }
 
-        // Phân tích câu nói thông minh để gửi đúng lệnh TV
+        // Phân tích câu nói thông minh chuẩn Google Assistant & Android TV
         function parseAndExecuteVoice(rawText) {
             const t = rawText.toLowerCase();
 
@@ -1398,7 +1610,7 @@
             } else if (t.includes('bài trước')) {
                 sendCmd('PREV_TRACK');
             }
-            // 6. Mở ứng dụng
+            // 6. Mở ứng dụng Android TV chuẩn
             else if (t.includes('youtube')) {
                 sendCmd('LAUNCH_APP', 'YouTube');
             } else if (t.includes('netflix')) {
@@ -1406,7 +1618,7 @@
             } else if (t.includes('spotify')) {
                 sendCmd('LAUNCH_APP', 'Spotify');
             }
-            // 7. Mặc định: Gửi câu nói lên TV tìm kiếm
+            // 7. Mặc định: Gửi truy vấn tìm kiếm giọng nói Google Assistant lên TV
             else {
                 sendCmd('VOICE_SEARCH', rawText);
             }
@@ -1428,7 +1640,7 @@
             inp.value = '';
         }
 
-        // 6. KHÓA TRẺ EM TRÊN REMOTE
+        // 8. KHÓA TRẺ EM TRÊN REMOTE
         function handleChildLockToggle(checked) {
             if (checked) {
                 sendCmd('LOCK_TV');
@@ -1446,7 +1658,7 @@
             document.getElementById('child-lock-toggle').checked = false;
         }
 
-        // 7. HẸN GIỜ TẮT MÁY TRÊN REMOTE
+        // 9. HẸN GIỜ TẮT MÁY TRÊN REMOTE
         function selectSleepTimer(mins, btnEl) {
             document.querySelectorAll('.timer-pill').forEach(b => b.classList.remove('active'));
             if (btnEl && mins > 0) btnEl.classList.add('active');
@@ -1483,7 +1695,7 @@
             document.getElementById('timer-badge-text').textContent = `Còn ${m}:${s}`;
         }
 
-        // 8. GỬI NHIỀU ẢNH LÀM HÌNH NỀN TV (KHÔNG GIỚI HẠN)
+        // 10. GỬI NHIỀU ẢNH LÀM HÌNH NỀN TV (KHÔNG GIỚI HẠN)
         async function handleSelectPhotos(event) {
             const files = event.target.files;
             if (!files || !files.length) return;
