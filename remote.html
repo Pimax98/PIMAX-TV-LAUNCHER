@@ -7,6 +7,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#070913">
     <title>Pimax Smart Remote Pro</title>
+    <link rel="icon" type="image/png" href="LOGO PM LAUNCHER.png">
+    <link rel="apple-touch-icon" href="LOGO PM LAUNCHER.png">
     <!-- PeerJS WebRTC P2P Library -->
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <style>
@@ -838,12 +840,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <div class="brand-info">
                     <div class="brand-title-wrap">
-                        <span class="brand-logo-icon">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <rect width="20" height="15" x="2" y="7" rx="3"/>
-                                <polyline points="17 2 12 7 7 2"/>
-                            </svg>
-                        </span>
+                        <img src="LOGO PM LAUNCHER.png" alt="Pimax Logo" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4); flex-shrink: 0;">
                         <span class="brand-name">Pimax TV Remote</span>
                     </div>
                     <div class="brand-pin-pill" onclick="toggleKeyEditor()" title="Bấm để đổi mã kết nối Tivi">
@@ -931,8 +928,15 @@
             </div>
         </div>
 
-        <!-- 3B. VIRTUAL AIR MOUSE TRACKPAD PANEL (ĐÃ XÓA TAP CLICK) -->
+        <!-- 3B. VIRTUAL AIR MOUSE TRACKPAD PANEL (HỖ TRỢ CẢ TRACKPAD & LẮC TAY GYRO) -->
         <div class="glass-card mouse-trackpad-card" id="mouse-panel">
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px;">
+                <span style="font-size: 13px; font-weight: 700; color: #FFFFFF;">Chuột Bay TV</span>
+                <button id="gyro-toggle-btn" class="pill-btn secondary" style="padding: 6px 14px; font-size: 11.5px; display: flex; align-items: center; gap: 6px; border-radius: 999px; cursor: pointer; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid var(--border-glass);" onclick="toggleGyroAirMouse()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    <span id="gyro-btn-text">Bật Lắc Tay (Gyro)</span>
+                </button>
+            </div>
             <div class="trackpad-touch-surface" id="trackpad-surface">
                 <div class="trackpad-guide-text">
                     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--neon-blue);">
@@ -940,7 +944,7 @@
                         <line x1="12" y1="6" x2="12" y2="10"/>
                     </svg>
                     <span>Lướt ngón tay để di chuyển chuột trên TV</span>
-                    <span style="font-size: 11px; color: var(--neon-blue); font-weight: 700;">Bấm nút "Click Chuột" bên dưới để chọn mục</span>
+                    <span style="font-size: 11px; color: var(--neon-blue); font-weight: 600;">Hoặc bật "Lắc Tay (Gyro)" để vẫy như Magic Remote</span>
                 </div>
             </div>
             <div class="trackpad-btn-row">
@@ -1180,9 +1184,39 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // 1. Phân tích tham số PIN từ URL hoặc bộ nhớ đã ghép nối trước đó
+        // Phản hồi rung xúc giác haptic (18ms) tức thì 0ms cho các nút điều hướng và chức năng
+        function triggerHaptic(duration = 18) {
+            try {
+                if ('vibrate' in navigator && typeof navigator.vibrate === 'function') {
+                    navigator.vibrate(duration);
+                }
+            } catch (e) {}
+        }
+
+        // Chuẩn hóa mã PIN TV (loại bỏ tiền tố PM- để đồng bộ 100% giữa TV và Remote)
+        function getCleanPin(pin) {
+            if (!pin) return '8899';
+            return String(pin).trim().toUpperCase().replace(/^PM-?/i, '');
+        }
+
+        // Kênh BroadcastChannel nội bộ tức thì 0ms (cho cùng thiết bị, đa tab hoặc WebView)
+        let remoteBroadcastChannel = null;
+        try {
+            if ('BroadcastChannel' in window) {
+                remoteBroadcastChannel = new BroadcastChannel('pimax_tv_channel');
+            }
+        } catch (e) {}
+
+        // 1. Phân tích tham số Device ID / PIN từ URL hoặc bộ nhớ đã ghép nối trước đó (Quét 1 lần duy nhất)
         const urlParams = new URLSearchParams(window.location.search);
-        let targetPin = urlParams.get('pin') || urlParams.get('room') || localStorage.getItem('pimax_last_paired_pin') || '8899';
+        let targetPin = urlParams.get('tv') || urlParams.get('pin') || urlParams.get('room') || localStorage.getItem('pimax_last_paired_pin');
+        if (!targetPin) {
+            targetPin = '8899';
+        } else {
+            try {
+                localStorage.setItem('pimax_last_paired_pin', targetPin);
+            } catch (e) {}
+        }
         document.getElementById('pin-display').textContent = targetPin;
 
         function toggleKeyEditor(forceShow) {
@@ -1202,7 +1236,7 @@
             const inp = document.getElementById('manual-pin-input');
             if (!inp || !inp.value.trim()) return;
 
-            const newPin = inp.value.trim();
+            const newPin = inp.value.trim().toUpperCase();
             targetPin = newPin;
             document.getElementById('pin-display').textContent = newPin;
 
@@ -1213,6 +1247,7 @@
             // Cập nhật tham số URL (không reload trang)
             try {
                 const newUrl = new URL(window.location.href);
+                newUrl.searchParams.set('tv', newPin);
                 newUrl.searchParams.set('pin', newPin);
                 window.history.replaceState({}, '', newUrl.toString());
             } catch (e) {}
@@ -1264,49 +1299,185 @@
                 mousePanel.style.display = 'flex';
                 tabDpad.classList.remove('active');
                 tabMouse.classList.add('active');
-                sendCmd('MOUSE_MOVE', { dx: 0, dy: 0 });
+                sendCmd('SHOW_MOUSE', { dx: 0, dy: 0 });
+                updateStatus('Chuột Bay đang bật', '#38BDF8');
+                try { localStorage.setItem('pimax_remote_mode', 'mouse'); } catch(e){}
             } else {
+                if (typeof stopGyro === 'function') stopGyro();
                 dpadPanel.style.display = 'flex';
                 mousePanel.style.display = 'none';
                 tabMouse.classList.remove('active');
                 tabDpad.classList.add('active');
+                try { localStorage.setItem('pimax_remote_mode', 'dpad'); } catch(e){}
             }
             if (navigator.vibrate) navigator.vibrate(15);
         }
 
-        // 3. TRACKPAD CẢM ỨNG (ĐÃ XÓA HOÀN TOÀN TAP-TO-CLICK THEO YÊU CẦU)
+        // 3. TRACKPAD CẢM ỨNG & CHUỘT BAY (Hỗ trợ cả Cảm ứng màn hình, Kéo chuột và Cảm biến Lắc tay Gyro)
         const trackpad = document.getElementById('trackpad-surface');
-        let lastTouchX = null;
-        let lastTouchY = null;
+        let isPointerActive = false;
+        let lastTrackX = null;
+        let lastTrackY = null;
+        let trackpadStartTime = 0;
+        let trackpadStartPos = { x: 0, y: 0 };
+        let trackpadMoved = false;
 
-        trackpad.addEventListener('touchstart', (e) => {
-            if (e.touches.length === 1) {
-                const touch = e.touches[0];
-                lastTouchX = touch.clientX;
-                lastTouchY = touch.clientY;
+        function handleTrackStart(clientX, clientY) {
+            isPointerActive = true;
+            lastTrackX = clientX;
+            lastTrackY = clientY;
+            trackpadStartPos = { x: clientX, y: clientY };
+            trackpadStartTime = Date.now();
+            trackpadMoved = false;
+            sendCmd('SHOW_MOUSE', { dx: 0, dy: 0 });
+        }
+
+        function handleTrackMove(clientX, clientY) {
+            if (!isPointerActive || lastTrackX === null || lastTrackY === null) return;
+            const dx = (clientX - lastTrackX) * 1.6;
+            const dy = (clientY - lastTrackY) * 1.6;
+
+            if (Math.hypot(clientX - trackpadStartPos.x, clientY - trackpadStartPos.y) > 6) {
+                trackpadMoved = true;
             }
-        }, { passive: false });
 
-        trackpad.addEventListener('touchmove', (e) => {
-            if (e.touches.length === 1 && lastTouchX !== null && lastTouchY !== null) {
-                e.preventDefault();
-                const touch = e.touches[0];
-                const dx = touch.clientX - lastTouchX;
-                const dy = touch.clientY - lastTouchY;
+            if (Math.abs(dx) > 0.8 || Math.abs(dy) > 0.8) {
+                sendCmd('MOUSE_MOVE', { dx, dy });
+                lastTrackX = clientX;
+                lastTrackY = clientY;
+            }
+        }
 
-                if (Math.abs(dx) > 1.5 || Math.abs(dy) > 1.5) {
-                    sendCmd('MOUSE_MOVE', { dx, dy });
-                    lastTouchX = touch.clientX;
-                    lastTouchY = touch.clientY;
+        function handleTrackEnd() {
+            if (isPointerActive && !trackpadMoved && (Date.now() - trackpadStartTime < 250)) {
+                // Chạm nhẹ (Tap) vào mặt Trackpad -> Tự động Click chuột tức thì 0ms
+                sendCmd('MOUSE_CLICK');
+                triggerHaptic(22);
+            }
+            isPointerActive = false;
+            lastTrackX = null;
+            lastTrackY = null;
+        }
+
+        if (window.PointerEvent) {
+            trackpad.addEventListener('pointerdown', (e) => {
+                try { trackpad.setPointerCapture(e.pointerId); } catch(err) {}
+                handleTrackStart(e.clientX, e.clientY);
+            });
+            trackpad.addEventListener('pointermove', (e) => {
+                if (isPointerActive) {
+                    e.preventDefault();
+                    handleTrackMove(e.clientX, e.clientY);
                 }
-            }
-        }, { passive: false });
+            });
+            const stopP = (e) => {
+                try { if (e && e.pointerId) trackpad.releasePointerCapture(e.pointerId); } catch(err) {}
+                handleTrackEnd();
+            };
+            trackpad.addEventListener('pointerup', stopP);
+            trackpad.addEventListener('pointercancel', stopP);
+        } else {
+            trackpad.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    const t = e.touches[0];
+                    handleTrackStart(t.clientX, t.clientY);
+                }
+            }, { passive: false });
 
-        trackpad.addEventListener('touchend', (e) => {
-            // ĐÃ XÓA TAP CLICK THEO YÊU CẦU: Không còn tự động click khi nhấc tay nữa!
-            lastTouchX = null;
-            lastTouchY = null;
-        });
+            trackpad.addEventListener('touchmove', (e) => {
+                if (e.touches.length === 1 && isPointerActive) {
+                    e.preventDefault();
+                    const t = e.touches[0];
+                    handleTrackMove(t.clientX, t.clientY);
+                }
+            }, { passive: false });
+
+            trackpad.addEventListener('touchend', handleTrackEnd);
+        }
+
+        /* ===== TÍNH NĂNG CHUỘT BAY LẮC TAY (GYROSCOPE AIR MOUSE) ===== */
+        let isGyroEnabled = false;
+        let lastGamma = null;
+        let lastBeta = null;
+        let lastGyroSendTime = 0;
+
+        function toggleGyroAirMouse() {
+            if (!isGyroEnabled) {
+                if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                    DeviceOrientationEvent.requestPermission().then(response => {
+                        if (response === 'granted') {
+                            startGyro();
+                        } else {
+                            alert('Trình duyệt chưa được cấp quyền cảm biến con quay hồi chuyển!');
+                        }
+                    }).catch(() => {
+                        startGyro();
+                    });
+                } else {
+                    startGyro();
+                }
+            } else {
+                stopGyro();
+            }
+        }
+
+        function startGyro() {
+            isGyroEnabled = true;
+            lastGamma = null;
+            lastBeta = null;
+            window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
+            const btn = document.getElementById('gyro-toggle-btn');
+            const txt = document.getElementById('gyro-btn-text');
+            if (btn) {
+                btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
+                btn.style.borderColor = '#10B981';
+            }
+            if (txt) txt.textContent = 'Đang Bật Lắc Tay';
+            sendCmd('SHOW_MOUSE', { dx: 0, dy: 0 });
+            updateStatus('Chuột Bay Lắc Tay: BẬT', '#10B981');
+            if (navigator.vibrate) navigator.vibrate([25, 40]);
+        }
+
+        function stopGyro() {
+            isGyroEnabled = false;
+            window.removeEventListener('deviceorientation', handleDeviceOrientation);
+            const btn = document.getElementById('gyro-toggle-btn');
+            const txt = document.getElementById('gyro-btn-text');
+            if (btn) {
+                btn.style.background = 'rgba(255,255,255,0.08)';
+                btn.style.borderColor = 'var(--border-glass)';
+            }
+            if (txt) txt.textContent = 'Bật Lắc Tay (Gyro)';
+            updateStatus('Chuột Bay Lắc Tay: TẮT', '#38BDF8');
+        }
+
+        function handleDeviceOrientation(e) {
+            if (!isGyroEnabled || e.gamma === null || e.beta === null) return;
+            const now = performance.now();
+            if (now - lastGyroSendTime < 24) return;
+            lastGyroSendTime = now;
+
+            if (lastGamma === null || lastBeta === null) {
+                lastGamma = e.gamma;
+                lastBeta = e.beta;
+                return;
+            }
+
+            let dGamma = e.gamma - lastGamma;
+            let dBeta = e.beta - lastBeta;
+            lastGamma = e.gamma;
+            lastBeta = e.beta;
+
+            if (Math.abs(dGamma) < 0.25) dGamma = 0;
+            if (Math.abs(dBeta) < 0.25) dBeta = 0;
+
+            const dx = dGamma * 3.2;
+            const dy = dBeta * 3.2;
+
+            if (dx !== 0 || dy !== 0) {
+                sendCmd('MOUSE_MOVE', { dx, dy });
+            }
+        }
 
         // 4. TÍNH NĂNG GIỮ TAY TẠI NÚT OK KÉO/VUỐT LÊN, XUỐNG, TRÁI, PHẢI (VIRTUAL JOYSTICK ON OK)
         const centerOkBtn = document.getElementById('center-ok-btn');
@@ -1446,12 +1617,13 @@
             if (!phonePeer || !targetPin) return;
             updateStatus('Đang kết nối TV...', '#F59E0B');
 
-            const targetTvId = 'pimax-tv-' + targetPin;
+            const cleanPin = getCleanPin(targetPin);
+            const targetTvId = 'pimax-tv-' + cleanPin;
             activeConn = phonePeer.connect(targetTvId, { reliable: true });
 
             activeConn.on('open', () => {
                 isConnected = true;
-                updateStatus('Đã kết nối TV', '#10B981');
+                updateStatus('Đã kết nối TV P2P', '#10B981');
             });
 
             activeConn.on('close', () => {
@@ -1462,14 +1634,14 @@
             });
         }
 
-        // 6. GỬI LỆNH ĐIỀU KHIỂN (ĐÃ FIX: CHỐNG DỘI PHÍM & KHÔNG GỬI TRÙNG 2 KÊNH)
+        // 6. GỬI LỆNH ĐIỀU KHIỂN (ĐÃ FIX: CHỐNG DỘI PHÍM & TÍCH HỢP BROADCASTCHANNEL + HAPTIC)
         function sendCmd(cmd, payload = '') {
             const now = Date.now();
             const isNav = ['KEY_UP','KEY_DOWN','KEY_LEFT','KEY_RIGHT','KEY_ENTER','KEY_BACK','KEY_HOME'].includes(cmd);
 
-            // Chống dội phím (Debounce 140ms cho các phím điều hướng)
+            // Chống dội phím siêu nhạy (Debounce 75ms cho các phím điều hướng phản hồi tức thì)
             if (isNav) {
-                if (now - lastNavSendTime < 135) return;
+                if (now - lastNavSendTime < 75) return;
                 lastNavSendTime = now;
             }
 
@@ -1477,9 +1649,20 @@
             const msgId = Math.random().toString(36).substring(2, 9);
             const msg = { id: msgId, cmd, payload, t: now };
 
-            if (navigator.vibrate) {
-                navigator.vibrate(16);
+            // Phản hồi rung nhẹ haptic (18ms) khi nhấn nút hoặc click chuột (không rung khi rê chuột)
+            if (cmd !== 'MOUSE_MOVE' && cmd !== 'SHOW_MOUSE') {
+                triggerHaptic(18);
             }
+
+            const cleanPin = getCleanPin(targetPin);
+
+            // Kênh 0: Kênh BroadcastChannel & LocalStorage tức thì 0ms (cho cùng máy, đa tab hoặc WebView)
+            if (remoteBroadcastChannel) {
+                try { remoteBroadcastChannel.postMessage(msg); } catch (e) {}
+            }
+            try {
+                localStorage.setItem('pimax_tv_remote_cmd', JSON.stringify(msg));
+            } catch (e) {}
 
             let sentViaPeer = false;
             // Kênh 1: Ưu tiên gửi qua PeerJS WebRTC P2P (0-2ms latency)
@@ -1490,15 +1673,48 @@
                 } catch (e) {}
             }
 
-            // Kênh 2: CHỈ gửi dự phòng qua Cloud Relay nếu WebRTC P2P CHƯA KẾT NỐI (Chặn triệt để nhảy 2-3 bước!)
-            if (!sentViaPeer && cmd !== 'SET_WALLPAPER' && cmd !== 'MOUSE_MOVE') {
-                fetch(`https://ntfy.sh/pimax_tv_remote_${targetPin}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(msg)
-                }).then(() => {
-                    updateStatus('Đã gửi qua Cloud', '#10B981');
-                }).catch(() => {});
+            // Kênh 2: Gửi dự phòng qua Cloud Relay nếu WebRTC P2P CHƯA KẾT NỐI
+            if (!sentViaPeer && cmd !== 'SET_WALLPAPER') {
+                if (cmd === 'MOUSE_MOVE') {
+                    queueCloudMouseMove(payload, cleanPin);
+                } else {
+                    fetch(`https://ntfy.sh/pimax_tv_remote_${cleanPin}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(msg)
+                    }).then(() => {
+                        updateStatus('Đã kết nối qua Cloud Relay', '#10B981');
+                    }).catch(() => {});
+                }
+            }
+        }
+
+        // Hàng đợi điều tiết gửi tọa độ Chuột qua Cloud Relay (Tránh nghẽn mạng khi chưa có WebRTC P2P)
+        let cloudMouseTimer = null;
+        let pendingCloudDx = 0;
+        let pendingCloudDy = 0;
+
+        function queueCloudMouseMove(payload, cPin = null) {
+            const pinToUse = cPin || getCleanPin(targetPin);
+            pendingCloudDx += (payload && payload.dx) || 0;
+            pendingCloudDy += (payload && payload.dy) || 0;
+
+            if (!cloudMouseTimer) {
+                cloudMouseTimer = setTimeout(() => {
+                    cloudMouseTimer = null;
+                    const dx = pendingCloudDx;
+                    const dy = pendingCloudDy;
+                    pendingCloudDx = 0;
+                    pendingCloudDy = 0;
+                    if (Math.abs(dx) > 0 || Math.abs(dy) > 0) {
+                        const mMsg = { id: Math.random().toString(36).substring(2, 9), cmd: 'MOUSE_MOVE', payload: { dx, dy }, t: Date.now() };
+                        fetch(`https://ntfy.sh/pimax_tv_remote_${pinToUse}`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(mMsg)
+                        }).catch(() => {});
+                    }
+                }, 40);
             }
         }
 
@@ -1512,8 +1728,16 @@
             const voiceStatus = document.getElementById('voice-status-text');
 
             if (!SpeechRecognition) {
-                alert('Trình duyệt của bạn chưa hỗ trợ Web Speech API. Hãy mở bằng Google Chrome hoặc Safari nhé!');
+                alert('Trình duyệt của bạn chưa hỗ trợ Web Speech API. Bạn có thể nhập lệnh tìm kiếm vào ô bên dưới!');
                 return;
+            }
+
+            // Kiểm tra chính sách bảo mật trình duyệt đối với Micro
+            if (window.isSecureContext === false && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                if (voiceStatus) {
+                    voiceStatus.textContent = 'Trình duyệt chặn Mic trên HTTP. Vui lòng mở qua HTTPS hoặc gõ lệnh bên dưới!';
+                    voiceStatus.style.color = '#F59E0B';
+                }
             }
 
             if (isListening) {
@@ -1530,7 +1754,7 @@
                 recognition.onstart = () => {
                     isListening = true;
                     micBtn.classList.add('listening');
-                    voiceStatus.textContent = '🎙️ Google Assistant đang lắng nghe...';
+                    voiceStatus.textContent = 'Google Assistant đang lắng nghe...';
                     voiceStatus.style.color = '#38BDF8';
                     sendCmd('ASSISTANT_ACTIVATE');
                     if (navigator.vibrate) navigator.vibrate([20, 40]);
@@ -1538,14 +1762,18 @@
 
                 recognition.onresult = (event) => {
                     const text = event.results[0][0].transcript.trim();
-                    voiceStatus.textContent = `🗣️ "${text}"`;
+                    voiceStatus.textContent = `"${text}"`;
                     voiceStatus.style.color = '#10B981';
                     parseAndExecuteVoice(text);
                 };
 
                 recognition.onerror = (err) => {
                     console.warn('Voice error:', err);
-                    voiceStatus.textContent = 'Không nghe rõ, vui lòng thử lại';
+                    if (err && err.error === 'not-allowed') {
+                        voiceStatus.textContent = 'Trình duyệt chặn Micro. Cần kết nối HTTPS hoặc cấp quyền Mic!';
+                    } else {
+                        voiceStatus.textContent = 'Không nghe rõ, vui lòng thử lại';
+                    }
                     voiceStatus.style.color = '#F43F5E';
                 };
 
@@ -1772,6 +2000,18 @@
 
         window.addEventListener('load', () => {
             initPeerConnection();
+            try {
+                const savedMode = localStorage.getItem('pimax_remote_mode');
+                if (savedMode === 'mouse') switchControlMode('mouse');
+            } catch(e){}
+
+            // Kích hoạt rung haptic xúc giác tức thì (0ms) ngay khi ngón tay vừa chạm vào nút trên Remote
+            const hapticButtons = document.querySelectorAll('.dpad-arrow, .dpad-center-ok, .action-tile, .trackpad-action-btn, .power-btn, .app-pill, .mode-tab, #gyro-toggle-btn');
+            hapticButtons.forEach(btn => {
+                btn.addEventListener('pointerdown', () => {
+                    triggerHaptic(18);
+                }, { passive: true });
+            });
         });
     </script>
 </body>
