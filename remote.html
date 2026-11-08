@@ -7,8 +7,8 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#070913">
     <title>Pimax Smart Remote Pro</title>
-    <link rel="icon" type="image/png" href="LOGO PM LAUNCHER.png">
-    <link rel="apple-touch-icon" href="LOGO PM LAUNCHER.png">
+    <link rel="icon" type="image/png" href="logo_pimax.png">
+    <link rel="apple-touch-icon" href="logo_pimax.png">
     <!-- PeerJS WebRTC P2P Library -->
     <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
     <style>
@@ -312,7 +312,9 @@
         }
 
         .dpad-center-ok:active {
-            filter: brightness(1.2);
+            transform: scale(0.92);
+            filter: brightness(1.25);
+            box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.6), 0 0 35px #8B5CF6;
         }
 
         .dpad-hint-note {
@@ -840,7 +842,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
                 <div class="brand-info">
                     <div class="brand-title-wrap">
-                        <img src="LOGO PM LAUNCHER.png" alt="Pimax Logo" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4); flex-shrink: 0;">
+                        <img src="data:image/png;base64,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" alt="Pimax Logo" style="width: 22px; height: 22px; border-radius: 6px; object-fit: cover; box-shadow: 0 2px 8px rgba(139, 92, 246, 0.4); flex-shrink: 0;">
                         <span class="brand-name">Pimax TV Remote</span>
                     </div>
                     <div class="brand-pin-pill" onclick="toggleKeyEditor()" title="Bấm để đổi mã kết nối Tivi">
@@ -928,14 +930,11 @@
             </div>
         </div>
 
-        <!-- 3B. VIRTUAL AIR MOUSE TRACKPAD PANEL (HỖ TRỢ CẢ TRACKPAD & LẮC TAY GYRO) -->
+        <!-- 3B. VIRTUAL AIR MOUSE TRACKPAD PANEL -->
         <div class="glass-card mouse-trackpad-card" id="mouse-panel">
             <div style="display: flex; justify-content: space-between; align-items: center; width: 100%; margin-bottom: 2px;">
-                <span style="font-size: 13px; font-weight: 700; color: #FFFFFF;">Chuột Bay TV</span>
-                <button id="gyro-toggle-btn" class="pill-btn secondary" style="padding: 6px 14px; font-size: 11.5px; display: flex; align-items: center; gap: 6px; border-radius: 999px; cursor: pointer; background: rgba(255,255,255,0.08); color: #fff; border: 1px solid var(--border-glass);" onclick="toggleGyroAirMouse()">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
-                    <span id="gyro-btn-text">Bật Lắc Tay (Gyro)</span>
-                </button>
+                <span style="font-size: 13px; font-weight: 700; color: #FFFFFF;">Bàn Cảm Ứng Chuột Bay</span>
+                <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;">Lướt để di chuột • Chạm để Click</span>
             </div>
             <div class="trackpad-touch-surface" id="trackpad-surface">
                 <div class="trackpad-guide-text">
@@ -943,8 +942,8 @@
                         <rect x="5" y="2" width="14" height="20" rx="7"/>
                         <line x1="12" y1="6" x2="12" y2="10"/>
                     </svg>
-                    <span>Lướt ngón tay để di chuyển chuột trên TV</span>
-                    <span style="font-size: 11px; color: var(--neon-blue); font-weight: 600;">Hoặc bật "Lắc Tay (Gyro)" để vẫy như Magic Remote</span>
+                    <span>Lướt ngón tay để di chuyển chuột mượt mà 60fps</span>
+                    <span style="font-size: 11px; color: var(--neon-blue); font-weight: 600;">Chạm nhẹ vào mặt bàn cảm ứng để Bấm (Click)</span>
                 </div>
             </div>
             <div class="trackpad-btn-row">
@@ -1184,13 +1183,45 @@
 
     <!-- JAVASCRIPT LOGIC -->
     <script>
-        // Phản hồi rung xúc giác haptic (18ms) tức thì 0ms cho các nút điều hướng và chức năng
-        function triggerHaptic(duration = 18) {
+        // Hệ thống phản hồi xúc giác kép (Physical Motor Haptic 45ms + Web Audio Mechanical Click tức thì 0ms)
+        let hapticAudioCtx = null;
+        function playSyntheticHapticClick() {
+            try {
+                if (!hapticAudioCtx) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) hapticAudioCtx = new AudioCtx();
+                }
+                if (hapticAudioCtx && hapticAudioCtx.state === 'suspended') {
+                    hapticAudioCtx.resume();
+                }
+                if (hapticAudioCtx) {
+                    const osc = hapticAudioCtx.createOscillator();
+                    const gain = hapticAudioCtx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(75, hapticAudioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(32, hapticAudioCtx.currentTime + 0.035);
+                    gain.gain.setValueAtTime(0.2, hapticAudioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, hapticAudioCtx.currentTime + 0.035);
+                    osc.connect(gain);
+                    gain.connect(hapticAudioCtx.destination);
+                    osc.start();
+                    osc.stop(hapticAudioCtx.currentTime + 0.035);
+                }
+            } catch(e) {}
+        }
+
+        let lastHapticTime = 0;
+        function triggerHaptic(duration = 45) {
+            const now = performance.now();
+            if (now - lastHapticTime < 35) return;
+            lastHapticTime = now;
+
             try {
                 if ('vibrate' in navigator && typeof navigator.vibrate === 'function') {
                     navigator.vibrate(duration);
                 }
             } catch (e) {}
+            playSyntheticHapticClick();
         }
 
         // Chuẩn hóa mã PIN TV (loại bỏ tiền tố PM- để đồng bộ 100% giữa TV và Remote)
@@ -1303,17 +1334,16 @@
                 updateStatus('Chuột Bay đang bật', '#38BDF8');
                 try { localStorage.setItem('pimax_remote_mode', 'mouse'); } catch(e){}
             } else {
-                if (typeof stopGyro === 'function') stopGyro();
                 dpadPanel.style.display = 'flex';
                 mousePanel.style.display = 'none';
                 tabMouse.classList.remove('active');
                 tabDpad.classList.add('active');
                 try { localStorage.setItem('pimax_remote_mode', 'dpad'); } catch(e){}
             }
-            if (navigator.vibrate) navigator.vibrate(15);
+            triggerHaptic(30);
         }
 
-        // 3. TRACKPAD CẢM ỨNG & CHUỘT BAY (Hỗ trợ cả Cảm ứng màn hình, Kéo chuột và Cảm biến Lắc tay Gyro)
+        // 3. TRACKPAD CẢM ỨNG CHUỘT BAY (BATCHING REQUESTANIMATIONFRAME 60FPS KHÔNG TRỄ)
         const trackpad = document.getElementById('trackpad-surface');
         let isPointerActive = false;
         let lastTrackX = null;
@@ -1321,6 +1351,9 @@
         let trackpadStartTime = 0;
         let trackpadStartPos = { x: 0, y: 0 };
         let trackpadMoved = false;
+        let pendingTrackDx = 0;
+        let pendingTrackDy = 0;
+        let trackRafId = null;
 
         function handleTrackStart(clientX, clientY) {
             isPointerActive = true;
@@ -1329,30 +1362,51 @@
             trackpadStartPos = { x: clientX, y: clientY };
             trackpadStartTime = Date.now();
             trackpadMoved = false;
+            pendingTrackDx = 0;
+            pendingTrackDy = 0;
             sendCmd('SHOW_MOUSE', { dx: 0, dy: 0 });
         }
 
         function handleTrackMove(clientX, clientY) {
             if (!isPointerActive || lastTrackX === null || lastTrackY === null) return;
-            const dx = (clientX - lastTrackX) * 1.6;
-            const dy = (clientY - lastTrackY) * 1.6;
+            const rawDx = (clientX - lastTrackX) * 1.8;
+            const rawDy = (clientY - lastTrackY) * 1.8;
+            lastTrackX = clientX;
+            lastTrackY = clientY;
 
             if (Math.hypot(clientX - trackpadStartPos.x, clientY - trackpadStartPos.y) > 6) {
                 trackpadMoved = true;
             }
 
-            if (Math.abs(dx) > 0.8 || Math.abs(dy) > 0.8) {
-                sendCmd('MOUSE_MOVE', { dx, dy });
-                lastTrackX = clientX;
-                lastTrackY = clientY;
+            pendingTrackDx += rawDx;
+            pendingTrackDy += rawDy;
+
+            if (!trackRafId) {
+                trackRafId = requestAnimationFrame(() => {
+                    trackRafId = null;
+                    if (Math.abs(pendingTrackDx) > 0.4 || Math.abs(pendingTrackDy) > 0.4) {
+                        sendCmd('MOUSE_MOVE', { dx: pendingTrackDx, dy: pendingTrackDy });
+                        pendingTrackDx = 0;
+                        pendingTrackDy = 0;
+                    }
+                });
             }
         }
 
         function handleTrackEnd() {
-            if (isPointerActive && !trackpadMoved && (Date.now() - trackpadStartTime < 250)) {
-                // Chạm nhẹ (Tap) vào mặt Trackpad -> Tự động Click chuột tức thì 0ms
+            if (trackRafId) {
+                cancelAnimationFrame(trackRafId);
+                trackRafId = null;
+                if (Math.abs(pendingTrackDx) > 0.4 || Math.abs(pendingTrackDy) > 0.4) {
+                    sendCmd('MOUSE_MOVE', { dx: pendingTrackDx, dy: pendingTrackDy });
+                    pendingTrackDx = 0;
+                    pendingTrackDy = 0;
+                }
+            }
+            if (isPointerActive && !trackpadMoved && (Date.now() - trackpadStartTime < 260)) {
+                // Chạm nhẹ (Tap) vào mặt Trackpad -> Click chuột tức thì 0ms
                 sendCmd('MOUSE_CLICK');
-                triggerHaptic(22);
+                triggerHaptic(45);
             }
             isPointerActive = false;
             lastTrackX = null;
@@ -1393,90 +1447,6 @@
             }, { passive: false });
 
             trackpad.addEventListener('touchend', handleTrackEnd);
-        }
-
-        /* ===== TÍNH NĂNG CHUỘT BAY LẮC TAY (GYROSCOPE AIR MOUSE) ===== */
-        let isGyroEnabled = false;
-        let lastGamma = null;
-        let lastBeta = null;
-        let lastGyroSendTime = 0;
-
-        function toggleGyroAirMouse() {
-            if (!isGyroEnabled) {
-                if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                    DeviceOrientationEvent.requestPermission().then(response => {
-                        if (response === 'granted') {
-                            startGyro();
-                        } else {
-                            alert('Trình duyệt chưa được cấp quyền cảm biến con quay hồi chuyển!');
-                        }
-                    }).catch(() => {
-                        startGyro();
-                    });
-                } else {
-                    startGyro();
-                }
-            } else {
-                stopGyro();
-            }
-        }
-
-        function startGyro() {
-            isGyroEnabled = true;
-            lastGamma = null;
-            lastBeta = null;
-            window.addEventListener('deviceorientation', handleDeviceOrientation, { passive: true });
-            const btn = document.getElementById('gyro-toggle-btn');
-            const txt = document.getElementById('gyro-btn-text');
-            if (btn) {
-                btn.style.background = 'linear-gradient(135deg, #10B981, #059669)';
-                btn.style.borderColor = '#10B981';
-            }
-            if (txt) txt.textContent = 'Đang Bật Lắc Tay';
-            sendCmd('SHOW_MOUSE', { dx: 0, dy: 0 });
-            updateStatus('Chuột Bay Lắc Tay: BẬT', '#10B981');
-            if (navigator.vibrate) navigator.vibrate([25, 40]);
-        }
-
-        function stopGyro() {
-            isGyroEnabled = false;
-            window.removeEventListener('deviceorientation', handleDeviceOrientation);
-            const btn = document.getElementById('gyro-toggle-btn');
-            const txt = document.getElementById('gyro-btn-text');
-            if (btn) {
-                btn.style.background = 'rgba(255,255,255,0.08)';
-                btn.style.borderColor = 'var(--border-glass)';
-            }
-            if (txt) txt.textContent = 'Bật Lắc Tay (Gyro)';
-            updateStatus('Chuột Bay Lắc Tay: TẮT', '#38BDF8');
-        }
-
-        function handleDeviceOrientation(e) {
-            if (!isGyroEnabled || e.gamma === null || e.beta === null) return;
-            const now = performance.now();
-            if (now - lastGyroSendTime < 24) return;
-            lastGyroSendTime = now;
-
-            if (lastGamma === null || lastBeta === null) {
-                lastGamma = e.gamma;
-                lastBeta = e.beta;
-                return;
-            }
-
-            let dGamma = e.gamma - lastGamma;
-            let dBeta = e.beta - lastBeta;
-            lastGamma = e.gamma;
-            lastBeta = e.beta;
-
-            if (Math.abs(dGamma) < 0.25) dGamma = 0;
-            if (Math.abs(dBeta) < 0.25) dBeta = 0;
-
-            const dx = dGamma * 3.2;
-            const dy = dBeta * 3.2;
-
-            if (dx !== 0 || dy !== 0) {
-                sendCmd('MOUSE_MOVE', { dx, dy });
-            }
         }
 
         // 4. TÍNH NĂNG GIỮ TAY TẠI NÚT OK KÉO/VUỐT LÊN, XUỐNG, TRÁI, PHẢI (VIRTUAL JOYSTICK ON OK)
@@ -1649,20 +1619,23 @@
             const msgId = Math.random().toString(36).substring(2, 9);
             const msg = { id: msgId, cmd, payload, t: now };
 
-            // Phản hồi rung nhẹ haptic (18ms) khi nhấn nút hoặc click chuột (không rung khi rê chuột)
+            // Phản hồi rung xúc giác haptic kép (Motor 45ms + Audio Click) khi nhấn nút hoặc click chuột
             if (cmd !== 'MOUSE_MOVE' && cmd !== 'SHOW_MOUSE') {
-                triggerHaptic(18);
+                triggerHaptic(45);
             }
 
             const cleanPin = getCleanPin(targetPin);
 
-            // Kênh 0: Kênh BroadcastChannel & LocalStorage tức thì 0ms (cho cùng máy, đa tab hoặc WebView)
+            // Kênh 0: Kênh BroadcastChannel tức thì 0ms (cho cùng máy, đa tab hoặc WebView)
             if (remoteBroadcastChannel) {
                 try { remoteBroadcastChannel.postMessage(msg); } catch (e) {}
             }
-            try {
-                localStorage.setItem('pimax_tv_remote_cmd', JSON.stringify(msg));
-            } catch (e) {}
+            // CHỈ ghi localStorage cho lệnh nút bấm - TUYỆT ĐỐI không ghi khi di chuột để tránh nghẽn I/O và giật lag
+            if (cmd !== 'MOUSE_MOVE' && cmd !== 'SHOW_MOUSE') {
+                try {
+                    localStorage.setItem('pimax_tv_remote_cmd', JSON.stringify(msg));
+                } catch (e) {}
+            }
 
             let sentViaPeer = false;
             // Kênh 1: Ưu tiên gửi qua PeerJS WebRTC P2P (0-2ms latency)
@@ -2006,11 +1979,11 @@
             } catch(e){}
 
             // Kích hoạt rung haptic xúc giác tức thì (0ms) ngay khi ngón tay vừa chạm vào nút trên Remote
-            const hapticButtons = document.querySelectorAll('.dpad-arrow, .dpad-center-ok, .action-tile, .trackpad-action-btn, .power-btn, .app-pill, .mode-tab, #gyro-toggle-btn');
+            const hapticButtons = document.querySelectorAll('.dpad-arrow, .dpad-center-ok, .action-tile, .trackpad-action-btn, .power-btn, .app-pill, .mode-tab-btn, .btn-violet-sm');
             hapticButtons.forEach(btn => {
-                btn.addEventListener('pointerdown', () => {
-                    triggerHaptic(18);
-                }, { passive: true });
+                const fireHaptic = () => triggerHaptic(45);
+                btn.addEventListener('pointerdown', fireHaptic, { passive: true });
+                btn.addEventListener('touchstart', fireHaptic, { passive: true });
             });
         });
     </script>
